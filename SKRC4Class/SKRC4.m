@@ -8,6 +8,8 @@
 
 #import "SKRC4.h"
 
+//encrypt sample : 我
+
 @implementation SKRC4
 
 + (NSString *)RC4EncryptionWithKey:(NSString *)key string:(NSString *)string
@@ -31,6 +33,8 @@
 	NSUInteger secondePointer = 0;
 
 	const char *utf8 = [string UTF8String];
+
+// 我 > /xe6, /x88, /91 (utf-8)
 	
 	for (NSUInteger index = 0; index < strlen(utf8); index ++) {
 		firstPointer = (firstPointer + 1) % 256;
@@ -42,6 +46,9 @@
 		NSUInteger v = [sBOX[(([sBOX[firstPointer] integerValue] + [sBOX[secondePointer] integerValue]) % 256)] integerValue];
 		NSUInteger s = [[NSNumber numberWithUnsignedChar:utf8[index]] integerValue];
 		result = [result stringByAppendingFormat:@"%c", s^v];
+// /xe6 > 230, 230 ^ x > 72, 72 > "&someString"
+//.
+//.
 	}
 	return result;
 }
@@ -53,6 +60,9 @@
 		unichar s = [string characterAtIndex:index];
 		result = [result stringByAppendingString:[NSString stringWithFormat:@"%.2x", s]];
 	}
+//"&someString" > "hexString"
+//.
+//.
 	return result;
 }
 
@@ -68,6 +78,9 @@
 		}
 		result = [result stringByAppendingString:[NSString stringWithFormat:@"%c",scannerInt]];
 	}
+//"hexSting" > "&someString"
+//.
+//.
 	return result;
 }
 
@@ -104,6 +117,9 @@
 		NSUInteger s = unidec;
 		const char boldOnBytes[] = {s^v};
 		[hexDec appendBytes:boldOnBytes length:sizeof(boldOnBytes)];
+//"&someString" > 72, 72 ^ x > 230, 230 > /xe6
+//.
+//.
 	}
 	
 	NSString *result = [[NSString alloc] initWithData:hexDec encoding:NSUTF8StringEncoding];
